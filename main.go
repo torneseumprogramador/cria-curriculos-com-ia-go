@@ -96,6 +96,17 @@ func gerarReceita() {
 	})
 
 	url := "https://api.openai.com/v1/chat/completions"
+
+	/*
+		gpt-4 (Limited Beta): É um modelo avançado, capaz de entender e gerar tanto linguagem natural quanto código. Atualmente, está em uma fase beta limitada e é acessível apenas para aqueles que têm acesso concedido.
+
+		gpt-3.5-turbo: Estes modelos também compreendem e geram linguagem natural ou código. O modelo gpt-3.5-turbo é otimizado para conversas, mas também é eficaz para tarefas tradicionais de preenchimento.
+
+		DALL·E (Beta): Pode gerar e editar imagens baseadas em um prompt de linguagem natural, oferecendo uma mistura única de criatividade visual e compreensão de linguagem.
+
+		Whisper (Beta): É um modelo de reconhecimento de fala que pode converter áudio em texto. Foi treinado em um conjunto de dados diversificado, permitindo que ele execute reconhecimento de fala multilíngue, tradução de fala e identificação de idioma.
+	*/
+
 	requestBody, err := json.Marshal(map[string]interface{}{
 		"model":    "gpt-3.5-turbo", // Substitua pelo modelo desejado.
 		"messages": messages,
@@ -127,6 +138,13 @@ func gerarReceita() {
 
 	var result map[string]interface{}
 	json.Unmarshal([]byte(responseBody), &result)
+
+	errorJson := result["error"]
+
+	if errorJson != nil {
+		fmt.Println(string(responseBody))
+		return
+	}
 
 	choices := result["choices"].([]interface{})
 	firstChoice := choices[0].(map[string]interface{})
